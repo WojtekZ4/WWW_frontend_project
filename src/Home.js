@@ -1,8 +1,8 @@
 import React from "react";
-function Page1(){
+function Home(){
     return(
         <div>
-            <h2>Page1</h2>
+            <h2>Home</h2>
             <p>Mauris sem velit, vehicula eget sodales vitae,
                 rhoncus eget sapien:</p>
             <ol>
@@ -16,4 +16,4 @@ function Page1(){
     );
 }
 
-export default Page1;
+export default Home;

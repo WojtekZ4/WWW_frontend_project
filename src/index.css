@@ -1,38 +1,47 @@
+html {
+    height: 100%;
+}
 body {
-    background-color: #FFCC00;
-    padding: 20px;
+    /*margin: 0;*/
+    /*height: 100%;*/
+    background-image: url('./images/201812-numbers.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    /*background-color: #FFCC00;*/
+    padding: 0;
     margin: 0;
+    height: 100%;
+}
+#root{
+    height: 100%;
+}
+.top_menu{
+/*    position: center;*/
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    margin: 0 10%;
+    /*padding: 10px;*/
+    background-color: cornflowerblue;
+    /*width: 80%;*/
+}
+.top_menu .header{
+    flex: 0 1 auto;
+}
+.top_menu .content{
+    background-color: #FFF;
+    flex: 1 1 auto;
+}
+.top_menu .footer{
+    flex: 0 1 40px;
 }
 h1, h2, p, ul, li {
+
     font-family: sans-serif;
 }
-ul.header li {
-    display: inline;
-    list-style-type: none;
-    margin: 0;
-}
-ul.header {
-    background-color: #111;
-    padding: 0;
-}
-ul.header li a {
-    color: #FFF;
-    font-weight: bold;
-    text-decoration: none;
-    padding: 20px;
-    display: inline-block;
-}
-.content {
-    background-color: #FFF;
-    padding: 20px;
-}
-.content h2 {
-    padding: 0;
-    margin: 0;
-}
-.content li {
-    margin-bottom: 10px;
-}
+
+/*table*/
 
 table {
     font-family: Arial, Helvetica, sans-serif;
@@ -55,4 +64,137 @@ table th {
     text-align: left;
     background-color: #04AA6D;
     color: white;
+}
+
+/*navigation menu*/
+
+.horizontal-list {
+    z-index: 5;
+    list-style: none;
+    /*list-style-type: none;*/
+    margin: 0;
+    padding: 0;
+    background-color: #333333;
+}
+
+.horizontal-list:after {
+    clear: both;
+    content: "";
+    display: block;
+}
+
+.horizontal-list > li {
+    float: left;
+    position: relative;
+}
+
+.horizontal-list > li > a {
+    text-align: left;
+    text-decoration: none;
+    padding: 5px 10px;
+    display: block;
+    color: white;
+    width: auto;
+}
+
+.horizontal-list > li > a:hover {
+    background-color: darkslateblue;
+}
+
+.vertical-list-1 {
+    z-index: 5;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #333333;
+    display: none;
+    width: 130px;
+    top: 100%;
+    left: 0;
+    position: absolute;
+}
+
+.vertical-list-1 > li {
+    position: relative;
+    width: 100%;
+    display: block;
+}
+
+.vertical-list-1 > li > a {
+    text-align: left;
+    text-decoration: none;
+    padding: 5px 10px;
+    display: block;
+    color: white;
+}
+
+.vertical-list-1 > li > a:hover {
+    background-color: darkslateblue;
+}
+
+#horizontalmenu > ul > li:hover > ul {
+    display: block;
+}
+
+.vertical-list-2 {
+    z-index: 5;
+    list-style: none;
+    padding: 0;
+    display: none;
+    background-color: #333333;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 100%;
+}
+
+.vertical-list-2 > li > a {
+    text-align: left;
+    text-decoration: none;
+    padding: 5px 10px;
+    display: block;
+    color: white;
+}
+
+.vertical-list-2 > li > a:hover {
+    background-color: darkslateblue;
+}
+
+.vertical-list-1 > li:hover ul {
+    display: block;
+}
+
+.empty_link{
+    cursor: default;
+}
+
+.real_link{
+    cursor: pointer;
+}
+
+/*trivia*/
+
+.trivia_box{
+    background-color: cornflowerblue;
+    margin: 5% 10% 5% 10%;
+    padding: 30px;
+    z-index: 1;
+}
+
+.trivia_box .trivia_box_text{
+    position: relative;
+    display: block;
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    z-index: 1;
+}
+
+.trivia_box .trivia_box_content{
+    position: relative;
+    display: block;
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    z-index: 1;
 }
