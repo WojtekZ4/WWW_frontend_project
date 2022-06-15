@@ -1,33 +1,33 @@
 import React from "react";
-import {useAsyncDebounce, useFilters, useGlobalFilter, useSortBy, useTable, usePagination} from "react-table";
+import {useFilters, useGlobalFilter, usePagination, useSortBy, useTable} from "react-table";
 import DATA from './data/famous_mathematicians.json'
 import {matchSorter} from 'match-sorter'
 
-// Define a default UI for filtering
-function GlobalFilter({
-                          preGlobalFilteredRows, globalFilter, setGlobalFilter,
-                      }) {
-    const count = preGlobalFilteredRows.length
-    const [value, setValue] = React.useState(globalFilter)
-    const onChange = useAsyncDebounce(value => {
-        setGlobalFilter(value || undefined)
-    }, 200)
-
-    return (<span>
-      Search:{' '}
-        <input
-            value={value || ""}
-            onChange={e => {
-                setValue(e.target.value);
-                onChange(e.target.value);
-            }}
-            placeholder={`${count} records...`}
-            style={{
-                fontSize: '1.1rem', border: '0',
-            }}
-        />
-    </span>)
-}
+// // Define a default UI for filtering
+// function GlobalFilter({
+//                           preGlobalFilteredRows, globalFilter, setGlobalFilter,
+//                       }) {
+//     const count = preGlobalFilteredRows.length
+//     const [value, setValue] = React.useState(globalFilter)
+//     const onChange = useAsyncDebounce(value => {
+//         setGlobalFilter(value || undefined)
+//     }, 200)
+//
+//     return (<span>
+//       Search:{' '}
+//         <input
+//             value={value || ""}
+//             onChange={e => {
+//                 setValue(e.target.value);
+//                 onChange(e.target.value);
+//             }}
+//             placeholder={`${count} records...`}
+//             style={{
+//                 fontSize: '1.1rem', border: '0',
+//             }}
+//         />
+//     </span>)
+// }
 
 // Define a default UI for filtering
 function DefaultColumnFilter({
@@ -71,40 +71,6 @@ function SelectColumnFilter({
             {option}
         </option>))}
     </select>)
-}
-
-
-// This is a custom filter UI that uses a
-// slider to set the filter value between a column's
-// min and max values
-function SliderColumnFilter({
-                                column: {filterValue, setFilter, preFilteredRows, id},
-                            }) {
-    // Calculate the min and max
-    // using the preFilteredRows
-
-    const [min, max] = React.useMemo(() => {
-        let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
-        let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
-        preFilteredRows.forEach(row => {
-            min = Math.min(row.values[id], min)
-            max = Math.max(row.values[id], max)
-        })
-        return [min, max]
-    }, [id, preFilteredRows])
-
-    return (<>
-        <input
-            type="range"
-            min={min}
-            max={max}
-            value={filterValue || min}
-            onChange={e => {
-                setFilter(parseInt(e.target.value, 10))
-            }}
-        />
-        <button onClick={() => setFilter(undefined)}>Off</button>
-    </>)
 }
 
 // This is a custom UI for our 'between' or number range
@@ -204,34 +170,22 @@ function Mathematicians_Table({columns, data}) {
         canNextPage
     } = useTable({
         columns, data, defaultColumn, // Be sure to pass the defaultColumn option
-        filterTypes,
+        filterTypes, initialState: {pageSize: 20}
     }, useGlobalFilter, useFilters, useSortBy, usePagination)
     // const firstPageRows = rows.slice(0, 10)
-    return (<>
+    return(<div className="math_table">
         <table {...getTableProps()}>
             <thead>
             {headerGroups.map(headerGroup => (<tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map(column => (<th {...column.getHeaderProps()}>
-                    {column.render('Header')}
-                    <button onClick={() => column.toggleSortBy(true)}>🔽</button>
-                    <button onClick={() => column.toggleSortBy(false)}>🔼</button>
-                    <div>{column.canFilter ? column.render('Filter') : null}</div>
+                    <div className="column_header">
+                        <div className="column_name">{column.render('Header')}</div>
+                        <div className="column_sorting_button" onClick={() => column.toggleSortBy(false)}>🔼</div>
+                        <div className="column_sorting_button" onClick={() => column.toggleSortBy(true)}>🔽</div>
+                        <div className="column_filter">{column.canFilter ? column.render('Filter') : null}</div>
+                    </div>
                 </th>))}
             </tr>))}
-            <tr>
-                <th
-                    colSpan={visibleColumns.length}
-                    style={{
-                        textAlign: 'left',
-                    }}
-                >
-                    <GlobalFilter
-                        preGlobalFilteredRows={preGlobalFilteredRows}
-                        globalFilter={state.globalFilter}
-                        setGlobalFilter={setGlobalFilter}
-                    />
-                </th>
-            </tr>
             </thead>
             <tbody {...getTableBodyProps()}>
             {page.map((row, i) => {
@@ -247,16 +201,20 @@ function Mathematicians_Table({columns, data}) {
         <div className="pagination">
             <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
                 {'<<'}
-            </button>{' '}
+            </button>
+            {' '}
             <button onClick={() => previousPage()} disabled={!canPreviousPage}>
                 {'<'}
-            </button>{' '}
+            </button>
+            {' '}
             <button onClick={() => nextPage()} disabled={!canNextPage}>
                 {'>'}
-            </button>{' '}
+            </button>
+            {' '}
             <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
                 {'>>'}
-            </button>{' '}
+            </button>
+            {' '}
             <span>
           Page{' '}
                 <strong>
@@ -272,7 +230,7 @@ function Mathematicians_Table({columns, data}) {
                         const page = e.target.value ? Number(e.target.value) - 1 : 0
                         gotoPage(page)
                     }}
-                    style={{ width: '100px' }}
+                    style={{width: '100px'}}
                 />
         </span>{' '}
             <select
@@ -281,14 +239,12 @@ function Mathematicians_Table({columns, data}) {
                     setPageSize(Number(e.target.value))
                 }}
             >
-                {[10, 20, 30, 40, 50].map(pageSize => (
-                    <option key={pageSize} value={pageSize}>
-                        Show {pageSize}
-                    </option>
-                ))}
+                {[20, 30, 40, 50].map(pageSize => (<option key={pageSize} value={pageSize}>
+                    Show {pageSize}
+                </option>))}
             </select>
         </div>
-    </>)
+    </div>)
 }
 
 // Define a custom filter filter function!

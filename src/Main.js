@@ -14,7 +14,7 @@ function Main() {
         <HashRouter>
             <div className="top_menu">
                 <div className="header">
-                    <h1>Dupa</h1>
+                    <h1>Math is fun!</h1>
                     <div id="horizontalmenu">
                         <ul className="horizontal-list">
                             <li>
@@ -108,8 +108,7 @@ function Main() {
                         <Route exact path="/page6" element={<Table/>}/>
                     </Routes>
                 </div>
-                <div className="footer">
-                </div>
+                <div className="footer"/>
             </div>
         </HashRouter>);
 }
