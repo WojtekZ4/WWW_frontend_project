@@ -1,56 +1,21 @@
 import React from "react";
 import {useFilters, useGlobalFilter, usePagination, useSortBy, useTable} from "react-table";
-import DATA from './data/famous_mathematicians.json'
+import DATA from '../data/famous_mathematicians.json'
 import {matchSorter} from 'match-sorter'
 
-// // Define a default UI for filtering
-// function GlobalFilter({
-//                           preGlobalFilteredRows, globalFilter, setGlobalFilter,
-//                       }) {
-//     const count = preGlobalFilteredRows.length
-//     const [value, setValue] = React.useState(globalFilter)
-//     const onChange = useAsyncDebounce(value => {
-//         setGlobalFilter(value || undefined)
-//     }, 200)
-//
-//     return (<span>
-//       Search:{' '}
-//         <input
-//             value={value || ""}
-//             onChange={e => {
-//                 setValue(e.target.value);
-//                 onChange(e.target.value);
-//             }}
-//             placeholder={`${count} records...`}
-//             style={{
-//                 fontSize: '1.1rem', border: '0',
-//             }}
-//         />
-//     </span>)
-// }
-
-// Define a default UI for filtering
-function DefaultColumnFilter({
-                                 column: {filterValue, preFilteredRows, setFilter},
-                             }) {
+function DefaultColumnFilter({column: {filterValue, preFilteredRows, setFilter},}) {
     const count = preFilteredRows.length
 
     return (<input
         value={filterValue || ''}
         onChange={e => {
-            setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
+            setFilter(e.target.value || undefined)
         }}
         placeholder={`Search ${count} records...`}
     />)
 }
 
-// This is a custom filter UI for selecting
-// a unique option from a list
-function SelectColumnFilter({
-                                column: {filterValue, setFilter, preFilteredRows, id},
-                            }) {
-    // Calculate the options for filtering
-    // using the preFilteredRows
+function SelectColumnFilter({column: {filterValue, setFilter, preFilteredRows, id},}) {
     const options = React.useMemo(() => {
         const options = new Set()
         preFilteredRows.forEach(row => {
@@ -59,7 +24,6 @@ function SelectColumnFilter({
         return [...options.values()]
     }, [id, preFilteredRows])
 
-    // Render a multi-select box
     return (<select
         value={filterValue}
         onChange={e => {
@@ -73,12 +37,7 @@ function SelectColumnFilter({
     </select>)
 }
 
-// This is a custom UI for our 'between' or number range
-// filter. It uses two number boxes and filters rows to
-// ones that have values between the two
-function NumberRangeColumnFilter({
-                                     column: {filterValue = [], preFilteredRows, setFilter, id},
-                                 }) {
+function NumberRangeColumnFilter({column: {filterValue = [], preFilteredRows, setFilter, id},}) {
     const [min, max] = React.useMemo(() => {
         let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
         let max = preFilteredRows.length ? preFilteredRows[0].values[id] : 0
@@ -126,15 +85,11 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
     return matchSorter(rows, filterValue, {keys: [row => row.values[id]]})
 }
 
-// Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = val => !val
 
 function Mathematicians_Table({columns, data}) {
     const filterTypes = React.useMemo(() => ({
-        // Add a new fuzzyTextFilterFn filter type.
-        fuzzyText: fuzzyTextFilterFn, // Or, override the default text filter to use
-        // "startWith"
-        text: (rows, id, filterValue) => {
+        fuzzyText: fuzzyTextFilterFn, text: (rows, id, filterValue) => {
             return rows.filter(row => {
                 const rowValue = row.values[id]
                 return rowValue !== undefined ? String(rowValue)
@@ -145,19 +100,14 @@ function Mathematicians_Table({columns, data}) {
     }), [])
 
     const defaultColumn = React.useMemo(() => ({
-        // Let's set up our default Filter UI
         Filter: DefaultColumnFilter,
     }), [])
+
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
-        rows,
         prepareRow,
-        state,
-        visibleColumns,
-        preGlobalFilteredRows,
-        setGlobalFilter,
         pageOptions,
         page,
         pageCount,
@@ -169,11 +119,9 @@ function Mathematicians_Table({columns, data}) {
         canPreviousPage,
         canNextPage
     } = useTable({
-        columns, data, defaultColumn, // Be sure to pass the defaultColumn option
-        filterTypes, initialState: {pageSize: 20}
+        columns, data, defaultColumn, filterTypes, initialState: {pageSize: 20}
     }, useGlobalFilter, useFilters, useSortBy, usePagination)
-    // const firstPageRows = rows.slice(0, 10)
-    return(<div className="math_table">
+    return (<div className="math_table">
         <table {...getTableProps()}>
             <thead>
             {headerGroups.map(headerGroup => (<tr {...headerGroup.getHeaderGroupProps()}>
@@ -188,7 +136,7 @@ function Mathematicians_Table({columns, data}) {
             </tr>))}
             </thead>
             <tbody {...getTableBodyProps()}>
-            {page.map((row, i) => {
+            {page.map((row) => {
                 prepareRow(row)
                 return (<tr {...row.getRowProps()}>
                     {row.cells.map(cell => {
@@ -247,7 +195,6 @@ function Mathematicians_Table({columns, data}) {
     </div>)
 }
 
-// Define a custom filter filter function!
 function filterGreaterThan(rows, id, filterValue) {
     return rows.filter(row => {
         const rowValue = row.values[id]
@@ -255,12 +202,7 @@ function filterGreaterThan(rows, id, filterValue) {
     })
 }
 
-// This is an autoRemove method on the filter function that
-// when given the new filter value and returns true, the filter
-// will be automatically removed. Normally this is just an undefined
-// check, but here, we want to remove the filter if it's not a number
 filterGreaterThan.autoRemove = val => typeof val !== 'number'
-
 
 function Table() {
     const data = React.useMemo(() => DATA, [])

@@ -1,6 +1,7 @@
 import React, {useCallback, useRef, useState} from "react";
 import useNumbersFacts from "./useNumbersFacts";
 import Fact from "./Fact";
+
 const pageSize = 20
 
 function NumbersFacts(query) {

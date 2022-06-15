@@ -33,6 +33,6 @@ export default function useNumbersFacts(query, pageNumber, pageSize) {
             })
         }
         return () => cancel()
-    }, [query, pageNumber])
+    }, [query, pageNumber, pageSize])
     return {loading, error, facts, hasMore}
 }
